@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyển đổi String JSON sang Object JSON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+        }
+        button {
+            margin-top: 10px;
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chuyển đổi chuỗi JSON sang đối tượng JSON</h1>
+    <form id="jsonForm">
+        <label for="jsonInput">Nhập chuỗi JSON:</label><br>
+        <textarea id="jsonInput" placeholder="Nhập chuỗi JSON ở đây..."></textarea><br>
+        <button type="submit" style="color: red;">Chuyển đổi</button>
+    </form>
+    <h2>Kết quả:</h2>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('jsonForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const jsonInput = document.getElementById('jsonInput').value;
+            const jsonObject = convertMarkdownJsonStringToObject(jsonInput);
+            
+            if (jsonObject) {
+                document.getElementById('result').textContent = JSON.stringify(jsonObject, null, 2);
+            } else {
+                document.getElementById('result').textContent = 'Lỗi: Không thể phân tích chuỗi JSON.';
+            }
+        });
+
+        function convertMarkdownJsonStringToObject(markdownJsonString) {
+            // Loại bỏ các dấu ```json và ``` bao quanh
+            let jsonString = markdownJsonString.replace(/```json|```/g, '').trim();
+            
+            // Loại bỏ các dấu "\\" trong chuỗi JSON
+            jsonString = jsonString.replace(/\\\\/g, '\\').replace(/\\"/g, '"').replace(/\\n/g, '\n');
+
+            // Chuyển đổi chuỗi JSON sang đối tượng JSON
+            try {
+                const jsonObject = JSON.parse(jsonString);
+                return jsonObject;
+            } catch (error) {
+                console.error("Lỗi khi phân tích chuỗi JSON:", error);
+                return null;
+            }
+        }
+    </script>
+</body>
+</html>
